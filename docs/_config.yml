@@ -31,12 +31,12 @@ github_username:  Mohamed-E-Fayed
 theme: minima
 plugins:
   - jekyll-feed
-  #- searchyll
   - jekyll-tagging
   - jekyll-tagging-related_posts
   - jekyll-seo-tag
   - jekyll-sitemap
   - jemoji
+  #- searchyll
 
 # Exclude from processing.
 # The following items will not be processed, by default.

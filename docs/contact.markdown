@@ -1,8 +1,9 @@
 ---
 layout: page
-title: "Contact"
+title: Contact
 permalink: /contact
----```
+---
+
 
 If you want to reach me out, contact me via:
 

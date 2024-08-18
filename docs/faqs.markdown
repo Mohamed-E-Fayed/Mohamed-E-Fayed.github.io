@@ -1,6 +1,7 @@
 ---
 layout: page
 title: FAQs
+permalink: /faqs
 ---
 
 This is the list of frequently asked questions and their answers.

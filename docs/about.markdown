@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About Me
-permalink: /about-me/
+permalink: /about/
 ---
 
 I am a blind Artificial Intelligence (AI) researcher and engineer with a computer engineer background and a strong passion in AI and accessibility. I believe in the importance of AI to develop inclusive education and software technologies.

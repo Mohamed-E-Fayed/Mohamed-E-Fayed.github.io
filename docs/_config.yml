@@ -29,6 +29,7 @@ github_username:  Mohamed-E-Fayed
 
 # Build settings
 theme: minima
+remote-theme: minima
 plugins:
   - jekyll-feed
   - jekyll-tagging

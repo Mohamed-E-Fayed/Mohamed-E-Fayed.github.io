@@ -28,8 +28,9 @@ twitter_username: Mohamed10Fayed
 github_username:  Mohamed-E-Fayed
 
 # Build settings
-theme: minima
-remote-theme: minima
+theme: minima #jekyll-theme-minimal
+remote-theme: minima # jekyll-theme-minimal
+
 plugins:
   - jekyll-feed
   - jekyll-tagging
@@ -37,6 +38,7 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
   - jemoji
+  - jekyll-remote-theme
   #- searchyll
 
 # Exclude from processing.

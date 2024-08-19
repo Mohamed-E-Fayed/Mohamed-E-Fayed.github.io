@@ -8,7 +8,10 @@ I am a blind Artificial Intelligence (AI) researcher and engineer with a comput
 
 I chose computer engineering as a field of study and profession because I want to add a value while being a blind, which is not offered by working only within the scope of accessible technologies.   Being blind forces me to have different point of view, think differently and discover several unfamiliar ways to do the job.
 
-I have been legally blind since 2015. I use screen readers Voiceover on Mac OS and iOS daily. In addition, I am certified  as an NVDA expert. I enjoy testing and reporting accessibility issues in an effort to make the web usable for everyone. I also develop my tools to make life easier for the blind community in specific and human beings in general in my spare time.
+I have been legally blind since 2015.
+I use screen readers Voiceover on Mac OS and iOS daily.
+In addition, I am [certified  as an NVDA expert](https://certification.nvaccess.org/).
+I enjoy testing and reporting accessibility issues in an effort to make the web usable for everyone. I also develop my tools to make life easier for the blind community in specific and human beings in general in my spare time.
 
 I believe that accessibility technologies are crucial for every human being and can improve their productivity and well being.
 

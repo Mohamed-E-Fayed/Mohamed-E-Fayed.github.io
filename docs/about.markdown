@@ -4,14 +4,17 @@ title: About Me
 permalink: /about/
 ---
 
-I am a blind Artificial Intelligence (AI) researcher and engineer with a computer engineer background and a strong passion in AI and accessibility. I believe in the importance of AI to develop inclusive education and software technologies.
+I am a blind Artificial Intelligence (AI) researcher and engineer with a computer engineer background and a strong passion in AI and accessibility.
+I believe in the importance of AI to develop inclusive education and software technologies.
 
-I chose computer engineering as a field of study and profession because I want to add a value while being a blind, which is not offered by working only within the scope of accessible technologies.   Being blind forces me to have different point of view, think differently and discover several unfamiliar ways to do the job.
+I chose computer engineering as a field of study and profession because I want to add a value while being a blind, which is not offered by working only within the scope of accessible technologies. 
+Being blind forces me to have different point of view, think differently and discover several unfamiliar ways to do the job.
 
 I have been legally blind since 2015.
-I use screen readers Voiceover on Mac OS and iOS daily.
+I use screen readers [Voiceover](https://www.apple.com/voiceover/info/guide/_1121.html) on Mac OS and iOS daily.
 In addition, I am [certified  as an NVDA expert](https://certification.nvaccess.org/).
-I enjoy testing and reporting accessibility issues in an effort to make the web usable for everyone. I also develop my tools to make life easier for the blind community in specific and human beings in general in my spare time.
+I enjoy testing and reporting accessibility issues in an effort to make the web usable for everyone.
+I also develop my tools to make life easier for the blind community in specific and human beings in general in my spare time.
 
 I believe that accessibility technologies are crucial for every human being and can improve their productivity and well being.
 

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-08-20T08:59:37+03:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Mohamed E. Fayed</title><subtitle>This is my personal website, where you can find my latest publications, resume and Blog Posts.</subtitle><entry><title type="html">Classification Metrics: An Accessible Cheat Sheet</title><link href="http://localhost:4000/docs/machine%20learning/classification/metrics/2024/08/14/classification-metrics.html" rel="alternate" type="text/html" title="Classification Metrics: An Accessible Cheat Sheet" /><published>2024-08-14T15:30:00+03:00</published><updated>2024-08-14T15:30:00+03:00</updated><id>http://localhost:4000/docs/machine%20learning/classification/metrics/2024/08/14/classification-metrics</id><content type="html" xml:base="http://localhost:4000/docs/machine%20learning/classification/metrics/2024/08/14/classification-metrics.html"><![CDATA[<p>Usually, I get confused about the calculations of classification metrics and their definitions.
+Moreover, searching for an accessible version is very time consuming process.
+So, I decided to write down this cheat sheet to remind myself of every detail instead of doing search each time.
+I hope it would be useful for you as well.</p>
+
+<p>Note: It is an in progress work, with TODOs. If you find anything missing, or incorrect, please <a href="mailto:mohamed.fayed@gatech.edu">email me</a></p>
+
+<h2 id="definitions">Definitions</h2>
+
+<p>Here are some definition to use in this cheat sheet.</p>
+
+<ul>
+  <li>Model or Machine Learning System or ML System are all used interchangeably.</li>
+  <li>Ground truth or Labels refer to annotated value in the dataset itself.</li>
+  <li>Prediction is referring to Machine Learning System’s output.</li>
+</ul>
+
+<p>Note: In binary classification, we may build a model of single output in range of [0-1] and makde decision based on a tunable threshold.
+Another approach is to create a single model that has two outputs (1 output for each class) per single input.
+At this approach, we usually convert the outputs into probabilities and select the class of higher probability.</p>
+
+<ul>
+  <li>True Positive: The model predicted postivie and the correct label is positive.</li>
+  <li>True Negative: The ML system predicted negative and the correct label is negative.</li>
+  <li>False Positive: the model predicted positive, but the correct label is negative.</li>
+  <li>
+    <p>False Negative: the model predicted negative, but the correct label is positive.</p>
+  </li>
+  <li>True/False is representative of whether prediction matches the ground truth.</li>
+  <li>Positive/Negative is the class predicted by the model.</li>
+</ul>
+
+<h2 id="data-to-use">Data To Use</h2>
+
+<p>I will use the below variables in calculating all metrics.
+I include the outputs to make it easy for you to verify when calculated by hand.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.57</span><span class="p">,</span> <span class="mf">0.86</span><span class="p">,</span> <span class="mf">0.77</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.64</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">0.41</span><span class="p">,</span> <span class="mf">0.21</span><span class="p">]</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># for 0.5 threshold
+</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="metrics">Metrics</h2>
+
+<h3 id="accuracy">Accuracy</h3>
+
+<p>How many inputs are correctly classified.</p>
+
+<p>$accuracy = $\frac{T_p + T_n}{T_p + T_n + F_p + F_n}$$</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="n">accuracy_score</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span> <span class="c1"># 0.6666666666666666
+</span></code></pre></div></div>
+
+<h3 id="precision">Precision</h3>
+
+<p>It is the accuracy for correctly predicting the positive class.
+In other words, when the model predicts positive, what is the percentage of it to be truly positive?</p>
+
+<p>$precision = \frac{T_p}{T_p + F_p}$$</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">precision_score</span>
+
+<span class="c1"># watch for order of parameters in order not to get wrong results
+</span><span class="n">precision_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span> <span class="c1"># 0.7142857142857143
+</span></code></pre></div></div>
+
+<h3 id="recall-or-true-positive-rate">Recall (Or True Positive Rate)</h3>
+
+<p>It is also referred to as True Positive Rate (TPR), Hit Rate or Sensitivity.</p>
+
+<p>$recall = \frac{T_p}{T_p + F_n}$$</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">recall_score</span>
+
+<span class="n">recall_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span> <span class="c1"># 0.8333333333333334
+</span></code></pre></div></div>
+
+<h3 id="false-positive-rate-fpr">False Positive Rate (FPR)</h3>
+
+<p>Also referred to as Fall Out or Type I Error Rate.</p>
+
+\[FPR = \frac{F_p}{F_p + T_n}\]
+
+<!--TODO: write the code for FPR-->
+
+<h3 id="specificity">Specificity</h3>
+
+<p>It is the inverse of False Positive Rate.</p>
+
+\[Specificity = \frac{T_n}{F_p + T_n} = 1 - \frac{F_p}{F_p + T_n}\]
+
+<!-- TODO: write the code for specificity -->
+
+<h3 id="f1-score">F1 Score</h3>
+
+<p>It is the harmonic mean between precision and recall.</p>
+
+\[f1-score = 2 * \frac{precision * recall}{precision + recall}\]
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+
+<span class="n">f1_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span> <span class="c1"># 0.7692307692307692
+</span></code></pre></div></div>
+
+<h3 id="confusion-matrix">Confusion Matrix</h3>
+
+<p>You can use confusion matrix to extract all previous metrics from it directly.
+&lt;!– TODO:</p>
+
+<p>Define Confusion Matrix and describe its content,
+Explain how to calculate TP, FP, TN, FN using it, thus all other metrics.
+–&gt;</p>
+
+<h2 id="thresholding">Thresholding</h2>
+
+<p>In case your model generates scores and you want to convert those scores into classes, you will need to search for thresholds to increase model performance or satisfy criteria for your problem, e.g. lower bias against Protected Class.
+This process is known as Thresholding, Threshold-Tuning or Threshold-Moving.</p>
+
+<p>There are many methods to find the threshold that satisfies your own conditions. These methods are illustrated in this section.</p>
+
+<h3 id="receiver-operating-characteristic-roc-curve">Receiver Operating Characteristic (ROC) Curve</h3>
+
+<p>Note: This section is copied from <a href="https://machinelearningmastery.com/threshold-moving-for-imbalanced-classification/">A Gentle Introduction to Threshold-Moving for Imbalanced Classification</a>.</p>
+
+<p>A ROC Curve  is a diagnostic plot that evaluates a set of probability predictions made by a model on a test dataset.
+A set of different thresholds are used to interpret the true positive rate and the false positive rate of the predictions on the positive (minority) class, and the scores are plotted in a line of increasing thresholds to create a curve.
+The false-positive rate is plotted on the x-axis and the true positive rate is plotted on the y-axis and the plot is referred to as the Receiver Operating Characteristic curve, or ROC curve.
+A diagonal line on the plot from the bottom-left to top-right indicates the “curve” for a no-skill classifier (predicts the majority class in all cases), and a point in the top left of the plot indicates a model with perfect skill.
+The curve is useful to understand the trade-off in the true-positive rate and false-positive rate for different thresholds.
+The area under the ROC Curve, so-called ROC AUC, provides a single number to summarize the performance of a model in terms of its ROC Curve with a value between 0.5 (no-skill) and 1.0 (perfect skill).
+The ROC Curve is a useful diagnostic tool for understanding the trade-off for different thresholds and the ROC AUC provides a useful number for comparing models based on their general capabilities.
+If crisp class labels are required from a model under such an analysis, then an optimal threshold is required.
+This would be a threshold on the curve that is closest to the top-left of the plot.</p>
+
+<p>Note: we may either get the values to plot the curve using <code class="language-plaintext highlighter-rouge">roc_curve</code>, and calculate geometric mean between FPR and TPR for each threshold to determine the best threshold.
+Instead of using Geometric Mean, you may use Youden’s J Statistic, which states that  \(J = sensitivity + Specificy - 1 = TPR + 1 - FPR - 1 = TPR - FPR\).
+Alternatively, get Area Under Curve for ROC using <code class="language-plaintext highlighter-rouge">roc_auc_score</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">roc_auc_score</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># scores is set of probabilities generated by the model for all given inputs
+</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+
+<span class="c1"># get the best threshold, either using geometric mean or J Statistic
+</span><span class="n">geometric_means</span> <span class="o">=</span> <span class="p">(</span><span class="n">tpr</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">fpr</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">tpr</span> <span class="o">-</span> <span class="n">fpr</span>
+
+<span class="n">best_idx</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">geometric_means</span><span class="p">)</span>
+<span class="n">best_idx_2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">J</span><span class="p">)</span> 
+<span class="k">print</span><span class="p">(</span><span class="n">best_idx</span> <span class="o">==</span> <span class="n">best_idx_2</span><span class="p">)</span> <span class="c1"># True
+</span><span class="n">best_threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">best_idx</span><span class="p">]</span>
+
+<span class="c1"># plot the curve
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'No Skill'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'.'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Logistic'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fpr</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">tpr</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'black'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Best'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'False Positive Rate'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'True Positive Rate'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="alternative-methods">Alternative Methods</h4>
+
+<p>You may only count on ROC Area Under Curve (or ROC AUC for short).
+This metric is 0.5 for unskilled models and 1.0 for perfect skilled model.</p>
+
+<!-- TODO: see how to use the function of roc_auc_score instead of roc_curve.-->
+
+<h3 id="precision-recall-curve">Precision Recall Curve</h3>
+
+<p>Unlike the ROC Curve, a precision-recall curve focuses on the performance of a classifier on the positive (minority class) only.</p>
+
+<p><a href="#precision">Precision</a> describes how good a model is at predicting the positive class.
+<a href="#recall">Recall</a> is calculated as the ratio of the number of true positives divided by the sum of the true positives and the false negatives.</p>
+
+<p>A precision-recall curve is calculated by creating crisp class labels for probability predictions across a set of thresholds and calculating the precision and recall for each threshold.
+A line plot is created for the thresholds in ascending order with recall on the x-axis and precision on the y-axis.</p>
+
+<p>A no-skill model is represented by a horizontal line with a precision that is the ratio of positive examples in the dataset.
+Perfect skill classifier has full precision and recall with a dot in the top-right corner.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">precision_recall_curve</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">precision_recall_curve</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+
+<span class="c1"># If we optimize the harmonic mean, i.e. F1-score
+</span><span class="n">f1_score</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
+<span class="n">best_idx</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f1_score</span><span class="p">)</span>
+
+<span class="c1"># plot the roc curve for the model
+</span><span class="n">no_skill</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">testy</span><span class="p">[</span><span class="n">testy</span><span class="o">==</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">testy</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">no_skill</span><span class="p">,</span><span class="n">no_skill</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'No Skill'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">recall</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'.'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Logistic'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">recall</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">precision</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'black'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Best'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Recall'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Precision'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>If we are interested in a threshold that results in the best balance of precision and recall, then this is the same as optimizing the F-score that summarizes the harmonic mean of both measures.</p>
+
+<h4 id="alternative-methods-1">Alternative Methods</h4>
+
+<p>You can calculate the area under the precision recall curve using <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html">sklearn.metrics.average_precision_score</a>.</p>
+
+<!-- TODO: see how to use average_precision_score instead of precision_recall_curve-->
+
+<h3 id="grid-search-for-a-threshold">Grid Search for a Threshold</h3>
+
+<p>You may do a grid search, i.e. search all possible threshold values, and see the performance of the model when using each value to make classification.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">def</span> <span class="nf">labelize</span><span class="p">(</span><span class="n">scores</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+    <span class="s">"""
+    given a threshold and set of scores, determine the label
+        """</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">scores</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="s">'int'</span><span class="p">)</span>
+
+<span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="n">f1_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">f1_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">labelize</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">threshold</span><span class="p">))</span> <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">]</span>
+<span class="n">best_idx</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f1_scores</span><span class="p">)</span>
+<span class="n">best_threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">best_idx</span><span class="p">]</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Note: Threshold finding is an optimization problem. You may use different optimization algorithms other than Grid Search.</li>
+</ul>
+
+<h2 id="averaging-methods">Averaging Methods</h2>
+
+<p>At the beginning of our ML project, we usually care about a single number indicating the performance of the ML system across all classes.
+So, we tend to use averaging methods to get a summary for all F1 scores across classes, for instance.
+In this section, we discuss different methods of averaging, and when to use each.</p>
+
+<p>Note: These subsections are almost copied from <a href="https://cran.r-project.org/web/packages/yardstick/vignettes/multiclass.html">this article</a></p>
+
+<h3 id="macro-average">Macro Average</h3>
+
+<p>Macro averaging reduces your multiclass predictions down to multiple sets of binary predictions, calculates the corresponding metric for each of the binary cases, and then averages the results together. As an example, consider 
+precision for the binary case \(Precision = \frac{T_p}{T_p + F_p}\).</p>
+
+<p>In the multiclass case, if there were levels A, B, C and D, macro averaging reduces the problem to multiple one-vs-all comparisons. The truth and estimate columns are recoded such that the only two levels are A and other, and then precision is calculated based on those recoded columns, with A being the “relevant” column. This process is repeated for the other 3 levels to get a total of 4 precision values. The results are then averaged together.</p>
+
+<p>This is the formula for ‘k’ classes:</p>
+
+<p>$Precision_{Macro} = \frac{1}{k} \sum_{i=1}^k Precision_i $$</p>
+
+<p>Note that in macro averaging, all classes get equal weight when contributing their portion of the precision value to the total (here 1/4). This might not be a realistic calculation when you have a large amount of class imbalance. In that case, a weighted macro average might make more sense, where the weights are calculated by the frequency of that class in the truthcolumn.</p>
+
+<h3 id="weighted-average">Weighted Average</h3>
+
+<p>The weighted average multiply the metric of each class by its weight in the validation/test sets, i.e. gives each metric for each class a weight.</p>
+
+\[Precision_{weighted} = \sum_{i=1}^k Precision_i * weight_i = \frac{1}{count_{dataset}} \sum_{i=1}^k Precision_i * count_i\]
+
+<h3 id="micro-average">Micro Average</h3>
+
+<p>Micro averaging treats the entire set of data as an aggregate result, and calculates 1 metric rather than k metrics that get averaged together.</p>
+
+<p>For precision, this works by calculating all of the true positive results for each class and using that as the numerator, and then calculating all of the true positive and false positive results for each class, and using that as the denominator.</p>
+
+\[Precision_{Micro} = \frac{\sum_{i=1}^k T_p_i}{\sum_{i=1}^k T_p_i + F_p_i}\]
+
+<p>In this case, rather than each class having equal weight, each observation gets equal weight. This gives the classes with the most observations more power.</p>
+
+<h3 id="micro-average-vs-weighted-average">Micro Average vs Weighted Average</h3>
+
+<p>Two methods to compute the same metric over multiple classes with different function graph, i.e. if you plot both, you get different looking curves.
+You may use either of those.</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://machinelearningmastery.com/threshold-moving-for-imbalanced-classification/">A Gentle Introduction to Threshold-Moving for Imbalanced Classification</a></li>
+  <li><a href="https://cran.r-project.org/web/packages/yardstick/vignettes/multiclass.html">MultiClass Averaging</a></li>
+  <li><a href="https://datascience.stackexchange.com/questions/15989/micro-average-vs-macro-average-performance-in-a-multiclass-classification-settin/24051#24051">Micro vs Macro Averaging Data Science Exchange</a></li>
+  <li><a href="https://www.geeksforgeeks.org/precision-recall-curve-ml/">Precision-Recall Curve Geeks4Geeks</a></li>
+  <li><a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html#">Precision Recall Scikit-learn</a></li>
+  <li><a href="https://link.springer.com/referenceworkentry/10.1007/978-1-4419-9863-7_255">True Positive Rate at Springer</a></li>
+  <li><a href="https://link.springer.com/referenceworkentry/10.1007/978-1-4419-9863-7_224">False Positive Rate at Springer</a></li>
+  <li><a href="https://stackoverflow.com/questions/31324218/scikit-learn-how-to-obtain-true-positive-true-negative-false-positive-and-fal">Calculating Metrics from Confusion Matrix (Stackoverflow)</a></li>
+</ul>]]></content><author><name></name></author><category term="docs" /><category term="machine learning" /><category term="classification" /><category term="metrics" /><summary type="html"><![CDATA[Usually, I get confused about the calculations of classification metrics and their definitions. Moreover, searching for an accessible version is very time consuming process. So, I decided to write down this cheat sheet to remind myself of every detail instead of doing search each time. I hope it would be useful for you as well.]]></summary></entry><entry><title type="html">Navigating through Inaccessible Higher Education: My journey to an ‘A’ in AI Ethics and Society course</title><link href="http://localhost:4000/docs/education/accessible%20education/accessibility/2024/08/05/my-journey-to-A-grade-in-AIES.html" rel="alternate" type="text/html" title="Navigating through Inaccessible Higher Education: My journey to an ‘A’ in AI Ethics and Society course" /><published>2024-08-05T10:44:02+03:00</published><updated>2024-08-05T10:44:02+03:00</updated><id>http://localhost:4000/docs/education/accessible%20education/accessibility/2024/08/05/my-journey-to-A-grade-in-AIES</id><content type="html" xml:base="http://localhost:4000/docs/education/accessible%20education/accessibility/2024/08/05/my-journey-to-A-grade-in-AIES.html"><![CDATA[<p>My midterm grades story this semester is inspiring for me, and I hope it would be so for you as well.</p>
+
+<p>I have taken AI Ethics and Society course and significant parts of its content were inaccessible.
+Since most of the midterm was inaccessible, I initially scored 26/78.
+I have agreed upon with Teaching Assistants to make my own version based on my own research and understanding about that content. This could be a reasonable method to prove that I understand that part and get credit for that.
+After doing some search and paying some effort, I succeeded in writing accessible articles about Anscombe’s Quartet, Misleading Graphs and Fairness Metrics.
+TAs were grateful for this effort and I my midterm credit increased to be 71/78.
+Ultimately, The whole course ended up with ‘A’, and that’s good news. 🎉</p>
+
+<p>This short story has been inspiring for me because:</p>
+
+<ol>
+  <li>I am more encouraged to redesign masters and doctoral methods of teaching students with disabilities.
+I hope also it would be useful for all other professors and blind students to truly consider recreating the content as a method of giving credit to blind students. This is crucial especially in Masters and Doctorate because of the frequent updates to courses contents.</li>
+  <li>It shows how much credit can a blind student lose due to inaccessible content.</li>
+  <li>I hope what I wrote would be beneficial to upcoming blind students.</li>
+  <li>As always, I am committed to solving my problems in my own way.</li>
+</ol>
+
+<p>Special thanks to dr Mahendar Mandala, Head TAs Tanya Churaman and Vijayakumar Sivanesan, and all other TAs for their support to make this story a success.</p>
+
+<p>Of course, I also can’t thank Allah (my God) enough for his invaluable support in every possible way to be the person I am today.</p>
+
+<p>#education #accessibleeducation #accessibility</p>]]></content><author><name></name></author><category term="docs" /><category term="education" /><category term="accessible education" /><category term="accessibility" /><summary type="html"><![CDATA[My midterm grades story this semester is inspiring for me, and I hope it would be so for you as well.]]></summary></entry></feed>

@@ -41,7 +41,7 @@ I will use the below variables in calculating all metrics.
 I include the outputs to make it easy for you to verify when calculated by hand.
 
 ```python
-scores = [0.9, 0.57, 0.86, 0.77, 0.99, 0.64, 0.87, 0.41, 0.21]
+scores = [0.9, 0.57, 0.86, 0.77, 0.99, 0.64, 0.87, 0.41, 0.45]
 predictions = [1, 1, 1, 1, 1, 1, 1, 0, 0] # for 0.5 threshold
 labels = [1, 1, 1, 1, 1, 0, 0, 0, 1]
 ```
@@ -52,7 +52,9 @@ labels = [1, 1, 1, 1, 1, 0, 0, 0, 1]
 
 How many inputs are correctly classified.
 
-$accuracy = $\frac{T_p + T_n}{T_p + T_n + F_p + F_n}$$
+```math
+accuracy = \frac{T_p + T_n}{T_p + T_n + F_p + F_n}
+```
 
 ```python
 from sklearn.metrics import accuracy_score

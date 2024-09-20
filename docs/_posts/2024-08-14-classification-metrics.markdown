@@ -67,7 +67,7 @@ accuracy_score(predictions, labels) # 0.6666666666666666
 It is the accuracy for correctly predicting the positive class.
 In other words, when the model predicts positive, what is the percentage of it to be truly positive?
 
-$precision = \frac{T_p}{T_p + F_p}$$
+:math:`precision = \frac{T_p}{T_p + F_p}`
 
 ```python
 from sklearn.metrics import precision_score

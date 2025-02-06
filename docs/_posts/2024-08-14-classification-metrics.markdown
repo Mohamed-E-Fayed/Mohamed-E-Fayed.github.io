@@ -58,9 +58,7 @@ labels = [1, 1, 1, 1, 1, 0, 0, 0, 1]
 
 How many inputs are correctly classified.
 
-```math
-accuracy = \frac{T_p + T_n}{T_p + T_n + F_p + F_n}
-```
+$$accuracy = \frac{T_p + T_n}{T_p + T_n + F_p + F_n}$$
 
 ```python
 from sklearn.metrics import accuracy_score

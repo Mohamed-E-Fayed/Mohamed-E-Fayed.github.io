@@ -8,6 +8,12 @@ categories:
   - metrics
 ---
 
+<head>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+
 Usually, I get confused about the calculations of classification metrics and their definitions.
 Moreover, searching for an accessible version is very time consuming process.
 So, I decided to write down this cheat sheet to remind myself of every detail instead of doing search each time.
@@ -98,7 +104,7 @@ $$FPR = \frac{F_p}{F_p + T_n}$$
 
 ### Specificity
 
-It is the inverse of False Positive Rate.
+It is the complement of False Positive Rate.
 
 $$ Specificity = \frac{T_n}{F_p + T_n} = 1 - \frac{F_p}{F_p + T_n}$$
 

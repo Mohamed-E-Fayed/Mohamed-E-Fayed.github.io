@@ -71,7 +71,7 @@ accuracy_score(predictions, labels) # 0.6666666666666666
 It is the accuracy for correctly predicting the positive class.
 In other words, when the model predicts positive, what is the percentage of it to be truly positive?
 
-:math:`precision = \frac{T_p}{T_p + F_p}`
+$$precision = \frac{T_p}{T_p + F_p}$$
 
 ```python
 from sklearn.metrics import precision_score
@@ -84,7 +84,7 @@ precision_score(labels, predictions) # 0.7142857142857143
 
 It is also referred to as True Positive Rate (TPR), Hit Rate or Sensitivity.
 
-$recall = \frac{T_p}{T_p + F_n}$$
+$$recall = \frac{T_p}{T_p + F_n}$$
 
 ```python
 from sklearn.metrics import recall_score

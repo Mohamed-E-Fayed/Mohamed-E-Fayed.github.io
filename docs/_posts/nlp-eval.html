@@ -178,7 +178,8 @@ View</h1>
 <li><a href="#background"
 id="toc-background"><a id="background">Background</a></a></li>
 <li><a href="#metrics-classification"
-id="toc-metrics-classification">Metrics Classification</a>
+id="toc-metrics-classification"><a id="metrics-classification">Metrics
+Classification</a></a>
 <ul class="incremental">
 <li><a href="#algorithmic-metrics"
 id="toc-algorithmic-metrics"><a id="algorithmic-metrics">Algorithmic
@@ -186,10 +187,10 @@ Metrics</a></a></li>
 <li><a href="#neural-metrics"
 id="toc-neural-metrics"><a id="neural-metrics">Neural
 Metrics</a></a></li>
-</ul></li>
 <li><a href="#evaluating-large-language-models"
 id="toc-evaluating-large-language-models"><a id="eval-llm">Evaluating
 Large Language Models</a></a></li>
+</ul></li>
 <li><a href="#references"
 id="toc-references"><a id="references">References</a></a></li>
 </ul>
@@ -200,46 +201,128 @@ Language Processing (NLP)</a> is a field interested in systems
 interacting with human language. Its tasks are divided into Natural
 Language Understanding (NLU) and Natural Language Generation (NLG). In
 this article, I explain the evaluation metrics developed to assess the
-quality of NLG models. If you are interested in NLU tasks, which are
-classification applications by nature, you may check my article: <a
+quality of NLG models and the intuition behind them. If you are
+interested in NLU tasks, which are classification applications by
+nature, you may check my article: <a
 href="https://mohamed-e-fayed.github.io/docs/machine%20learning/classification/metrics/2024/08/14/classification-metrics.html">Classification
 Metrics: A Cheatsheet</a>.</p>
 <p>For the sake of understanding the whole landscape, I will focus on
-Machine Translation problem as an example, and refer to other problems
-as well. If you have interest in Large Language Models and evaluating
-its output, you may proceed to the below section of <a
+Machine Translation problem as an example for NLG task, and refer to
+other problems as well. If you have interest in Large Language Models
+and evaluating its output, you may proceed to the below section of <a
 href="#eval-llm">Evaluating Instruction Fine-tuning</a>.</p>
+<p>Note: I believe that every researcher has to understand the reason
+why we needed an metric and the design choices lead to each one. This is
+crucial since it significantly affects the output of your system and
+effectiveness of your research overall. So, you will find me digging
+into details for a good reason.</p>
 <h2 id="background"><a id="background">Background</a></h2>
-<p>Machine Translation (MT) is an old problem since 1960s. The
-interesting part of this story starts in 2002, by the introduction of
-BLEU metric. If you have Chinese sentence, English translation, and
-model output in English, you may compare the generated output with
-reference translation (which is English in this case). This is the
-algorithm commonly used in evaluating MT models.</p>
-<h2 id="metrics-classification">Metrics Classification</h2>
-<p>I divide the metrics into two categories:</p>
+<p><a href="https://en.wikipedia.org/wiki/Machine_translation">Machine
+Translation (MT)</a> is one of the <a
+href="https://en.wikipedia.org/wiki/History_of_machine_translation">oldest
+problems</a> in <a
+href="https://en.wikipedia.org/wiki/Artificial_intelligence">artificial
+intelligence</a>. It is concerned with automatically converting text
+from one human language to another. For example, you want to translate
+Chinese sentence into English or vice versa. This should be done
+automatically using computers.</p>
+<p>The part of interest of this story starts in 2002, by the
+introduction of <a href="#papineni2002">BLEU: a Method for Automatic
+Evaluation of Machine Translation</a>. If you have Chinese sentence,
+English translation, and model output in English, you may compare the
+generated output with reference translation (which is English in this
+case). This algorithm has been the de facto metric to compare among <a
+href="https://en.wikipedia.org/wiki/Machine_translation">MT</a> systems
+till the introduction of first neural metric of <a
+href="#zhang2019">BERT Score</a>. Attention has shifted towards neural
+networks as metrics since they exhibit higher correlations with human
+judgements for machine translation systems. Since then, many other
+neural metrics have introduced in MT, e.g. <a href="#rei2020">Comet</a>
+and [] <a href="#juraska2023">MetricX</a> and other NLG tasks.</p>
+<h2 id="metrics-classification"><a id="metrics-classification">Metrics
+Classification</a></h2>
+<p>I divide the metrics into three categories:</p>
 <ol class="incremental" type="1">
 <li>Algorithmic: You use a predefined algorithm to compute score. This
 heavily relies on the existence of some reference text.</li>
 <li>Neural: You use neural network to assess the quality of your system.
 This is usually used when algorithmic metrics are not good indicators
 any more.</li>
+<li>Large Language Modelas a judge: As appears from its name, it is
+about using Large Language Models (LLMs) to assess the quality of other
+systems. They are used in assessing the quality of other LLMs in
+replying to user queries.</li>
 </ol>
+<p>To illustrate further why we need neural and LLM metrics, let’s
+consider the below table for interpreting the BLEU score. It is copied
+from <a
+href="https://cloud.google.com/translate/docs/advanced/automl-evaluate">this
+article</a> from Google Cloud about evaluating models.</p>
+<p><a id="interpret-bleu"></a> | BLEU Score | Interpretation | | :— | :—
+| | &lt; 10 | Almost useless | | 10 - 19 | Hard to get the gist | | 20 -
+29 | The gist is clear, but has significant grammatical errors | | 30 -
+40 | Understandable to good translations | | 40 - 50 | High quality
+translations | | 50 - 60 | Very high quality, adequate, and fluent
+translations | | &gt; 60 | Quality often better than human |</p>
+<p>Based on the above table, the agreement between human translators
+seams in the range of 50+ BLEU scores. This means that having systems
+that agree with human-made references all of scores greater than 50 can
+not be compared via BLEU scores. In simpler terms, we have reached the
+limit in evaluating using BLEU and other algorithms for very high
+resource pairs, e.g. English French of 56 BLEU scores. However, <a
+href="#freitag2021">(Freitag et al, 2021)</a> has shown that crowd
+workers may not differentiate between human and machine translation.
+Hence, necessitates the need for professional translators to assess the
+quality of recent MT systems, or complex neural models.</p>
 <h3 id="algorithmic-metrics"><a id="algorithmic-metrics">Algorithmic
 Metrics</a></h3>
 <p>The first category is algorithmic metrics. Given model output and
 reference output, compute score indicating how relevant is the
 prediction to ground truth.</p>
-<p>Here is a list of algorithmic metrics and tasks using them:</p>
+<p>Here is a list of algorithmic metrics and tasks in which they are
+used:</p>
 <ul class="incremental">
-<li>BLEU: commonly used in MT and Text Summarization. Since it has
-parameters that controls the computed scores, <a href="#post2018">(Post
-et al, 2018)</a> introduced sacrebleu implementation to fix those
-parameters for more fair comparison among papers.</li>
-<li>ChrF++: recently used in MT.</li>
-<li>ROUGE: Mostly used in text summarization, and can be used in MT. It
-has variances including: ROUGE-S and ROUGE-L.</li>
+<li><a href="#papeneni2002">BLEU</a>: commonly used in MT and Text
+Summarization. Since it has parameters that controls the computed
+scores, <a href="#post2018">(Post et al, 2018)</a> introduced sacrebleu
+implementation to fix those parameters for more fair comparison among
+papers.</li>
+<li>ChrF++: recently used in MT. It has been especially promoted in <a
+href="https://arxiv.org/abs/2207.04672">No Language Left Behind</a>
+paper.</li>
+<li><a href="#lin2004">ROUGE</a>: Mostly used in text summarization, and
+can be used in MT. It has variances including but not limited to:
+ROUGE-S and ROUGE-L.</li>
 </ul>
+<h4 id="bleu"><a id="bleu">BLEU</a></h4>
+<p>BLEU is an algorithm to compare between syntactic attributes of
+generated translation and reference one. I will focus on its attributes
+and leave the math to the papers <a href="#post2018">(Post et al,
+2018)</a> and python libraries. Referring to the <a
+href="#interpret-bleu">BLEU interpretation table</a>, we need to
+understand two important attributes:</p>
+<ol class="incremental" type="1">
+<li>Lowerscore is worse for sure, and</li>
+<li>higher score is not necessarily better.</li>
+</ol>
+<p>To understand it, consider the below three sentences of reference and
+two possible translations.</p>
+<!--TODO: make a better example-->
+<ul class="incremental">
+<li>Reference: He is a great guy. He made my day.</li>
+<li>Translation 1 (T1): He is a great guy. He made me cheerful.</li>
+<li>Translation 2 (T2): He is a great boy. He made my day.</li>
+<li>Translation 3 (T3): He is playing basketball.</li>
+</ul>
+<p>It is obvious that BLEU score of translation 2 (B2) is higher than
+that of translation 1 (B1) and both translations are significantly
+better than translation 3 of much lower score (B3). BLEU score
+guarantees that very poor translation, less than 40 BLEU score, is truly
+worse than higher scores, i.e. since B3 &lt; B1, then B3 for sure is
+worse than B1. On the other side, B2&gt;B1, in high range of BLEU score,
+does not necessarily mean that T2 is better than T1. They are very
+comparable to reference translation, i.e. the quality is considered as
+if a human translator wrote it.</p>
 <h3 id="neural-metrics"><a id="neural-metrics">Neural Metrics</a></h3>
 <p>Deep neural networks has been trained to score the quality of
 generations on given task. Since algorithmic metrics fall short when
@@ -247,19 +330,66 @@ there is no given reference or there might be a very large number of
 possible references, deep neural networks come to the rescue. Example
 models include:</p>
 <ol class="incremental" type="1">
-<li>Comet and Cometkiwi: the first neural models to assess the quality
-of outputs of MT systems. Some other neural metrics participated in the
-competition in the following years are MetricX and XTOWER.</li>
-<li>LLM as a judge: Due to the fact that LLMs are used to reply to user
-queries, where there is no single correct answer, researchers studied
-the usage of LLMs to judge LLMs outputs.</li>
+<li><a href="#zhang2019">BERT-Score</a>: The first neurla model to
+assess the quality of NLG models, to the best of knowledge.</li>
+<li>Comet](#rei2020) and <a href="#rei2022">Cometkiwi</a>: neural models
+to assess the quality of outputs of MT systems.</li>
+<li>Some other neural metrics participated in the competition in the
+following years are Google’s MetricX <a href="#juraska2023">(Juraska et
+al, 2013)</a>, <a href="#juraska2024">(Juraska et al, 2024)</a>.</li>
 </ol>
-<h2 id="evaluating-large-language-models"><a id="eval-llm">Evaluating
-Large Language Models</a></h2>
+<h3 id="evaluating-large-language-models"><a id="eval-llm">Evaluating
+Large Language Models</a></h3>
+<p>The third category of metrics is Large LAnguage Models as a judge. It
+is about prompting LLM to evaluate the response of another LLM and give
+scores. Since we are in the hype of LLMs, expect that you find many
+works that I have not cited. However, the main trends should be
+obvious.</p>
 <h2 id="references"><a id="references">References</a></h2>
 <ol class="incremental" type="1">
+<li><a id="papineni2002">Papineni, K., Roukos, S., Ward, T., &amp; Zhu,
+W. J. (2002, July). Bleu: a method for automatic evaluation of machine
+translation. In Proceedings of the 40th annual meeting of the
+Association for Computational Linguistics (pp. 311-318).
+unselected</a></li>
 <li><a id="post2018">Post, M. (2018). A call for clarity in reporting
 BLEU scores. arXiv preprint arXiv:1804.08771.</a></li>
+<li><a id="rei2020">Rei, R., Stewart, C., Farinha, A. C., &amp; Lavie,
+A. (2020). COMET: A neural framework for MT evaluation. arXiv preprint
+arXiv:2009.09025. unselected</a></li>
+<li><a id="rei2022">Rei, R., Treviso, M., Guerreiro, N. M., Zerva, C.,
+Farinha, A. C., Maroti, C., … &amp; Martins, A. F. (2022). CometKiwi:
+IST-unbabel 2022 submission for the quality estimation shared task.
+arXiv preprint arXiv:2209.06243. </a></li>
+<li><a id="juraska2023">Juraska, J., Finkelstein, M., Deutsch, D.,
+Siddhant, A., Mirzazadeh, M., &amp; Freitag, M. (2023). MetricX-23: The
+Google Submission to the WMT 2023 Metrics Shared Task. In P. Koehn, B.
+Haddow, T. Kocmi, &amp; C. Monz (Eds.), Proceedings of the Eighth
+Conference on Machine Translation (pp. 756–767). Association for
+Computational Linguistics.
+https://doi.org/10.18653/v1/2023.wmt-1.63</a></li>
+<li><a id="juraska2024">Juraska, J., Deutsch, D., Finkelstein, M., &amp;
+Freitag, M. (2024). MetricX-24: The Google submission to the WMT 2024
+metrics shared task. arXiv preprint arXiv:2410.03983. </a></li>
+<li><a id="freitag2021">Freitag, M., Foster, G., Grangier, D., Ratnakar,
+V., Tan, Q., &amp; Macherey, W. (2021). Experts, errors, and context: A
+large-scale study of human evaluation for machine translation.
+Transactions of the Association for Computational Linguistics, 9,
+1460-1474. unselected</a></li>
+<li><a id="nllb2002">Team, N. L. L. B., Costa-Jussà, M. R., Cross, J.,
+Çelebi, O., Elbayad, M., Heafield, K., … &amp; Wang, J. (2022). No
+language left behind: Scaling human-centered machine translation. arXiv
+preprint arXiv:2207.04672. unselected</a></li>
+<li><a id="lin2004"><a href="https://aclanthology.org/W04-1013/">ROUGE:
+A Package for Automatic Evaluation of Summaries</a> (Lin, 2004)</a>
+</a></li>
+<li><a id="zhang2019">Zhang, T., Kishore, V., Wu, F., Weinberger, K. Q.,
+&amp; Artzi, Y. (2019). Bertscore: Evaluating text generation with bert.
+arXiv preprint arXiv:1904.09675. column 2</a></li>
+<li><a id="zheng2023">Zheng, L., Chiang, W. L., Sheng, Y., Zhuang, S.,
+Wu, Z., Zhuang, Y., … &amp; Stoica, I. (2023). Judging llm-as-a-judge
+with mt-bench and chatbot arena. Advances in neural information
+processing systems, 36, 46595-46623. column 2</a></li>
 </ol>
 </body>
 </html>

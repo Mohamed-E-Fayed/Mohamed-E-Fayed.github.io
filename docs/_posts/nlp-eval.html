@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Understanding NLP systems evaluation: A Bird Eye View</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Understanding NLP systems evaluation: A Bird Eye
+View</h1>
+<p class="date">2024-08-14 12:30:00</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul class="incremental">
+<li><a href="#background"
+id="toc-background"><a id="background">Background</a></a></li>
+<li><a href="#metrics-classification"
+id="toc-metrics-classification">Metrics Classification</a>
+<ul class="incremental">
+<li><a href="#algorithmic-metrics"
+id="toc-algorithmic-metrics"><a id="algorithmic-metrics">Algorithmic
+Metrics</a></a></li>
+<li><a href="#neural-metrics"
+id="toc-neural-metrics"><a id="neural-metrics">Neural
+Metrics</a></a></li>
+</ul></li>
+<li><a href="#evaluating-large-language-models"
+id="toc-evaluating-large-language-models"><a id="eval-llm">Evaluating
+Large Language Models</a></a></li>
+<li><a href="#references"
+id="toc-references"><a id="references">References</a></a></li>
+</ul>
+</nav>
+<p><a
+href="https://en.wikipedia.org/wiki/Natural_language_processing">Natural
+Language Processing (NLP)</a> is a field interested in systems
+interacting with human language. Its tasks are divided into Natural
+Language Understanding (NLU) and Natural Language Generation (NLG). In
+this article, I explain the evaluation metrics developed to assess the
+quality of NLG models. If you are interested in NLU tasks, which are
+classification applications by nature, you may check my article: <a
+href="https://mohamed-e-fayed.github.io/docs/machine%20learning/classification/metrics/2024/08/14/classification-metrics.html">Classification
+Metrics: A Cheatsheet</a>.</p>
+<p>For the sake of understanding the whole landscape, I will focus on
+Machine Translation problem as an example, and refer to other problems
+as well. If you have interest in Large Language Models and evaluating
+its output, you may proceed to the below section of <a
+href="#eval-llm">Evaluating Instruction Fine-tuning</a>.</p>
+<h2 id="background"><a id="background">Background</a></h2>
+<p>Machine Translation (MT) is an old problem since 1960s. The
+interesting part of this story starts in 2002, by the introduction of
+BLEU metric. If you have Chinese sentence, English translation, and
+model output in English, you may compare the generated output with
+reference translation (which is English in this case). This is the
+algorithm commonly used in evaluating MT models.</p>
+<h2 id="metrics-classification">Metrics Classification</h2>
+<p>I divide the metrics into two categories:</p>
+<ol class="incremental" type="1">
+<li>Algorithmic: You use a predefined algorithm to compute score. This
+heavily relies on the existence of some reference text.</li>
+<li>Neural: You use neural network to assess the quality of your system.
+This is usually used when algorithmic metrics are not good indicators
+any more.</li>
+</ol>
+<h3 id="algorithmic-metrics"><a id="algorithmic-metrics">Algorithmic
+Metrics</a></h3>
+<p>The first category is algorithmic metrics. Given model output and
+reference output, compute score indicating how relevant is the
+prediction to ground truth.</p>
+<p>Here is a list of algorithmic metrics and tasks using them:</p>
+<ul class="incremental">
+<li>BLEU: commonly used in MT and Text Summarization. Since it has
+parameters that controls the computed scores, <a href="#post2018">(Post
+et al, 2018)</a> introduced sacrebleu implementation to fix those
+parameters for more fair comparison among papers.</li>
+<li>ChrF++: recently used in MT.</li>
+<li>ROUGE: Mostly used in text summarization, and can be used in MT. It
+has variances including: ROUGE-S and ROUGE-L.</li>
+</ul>
+<h3 id="neural-metrics"><a id="neural-metrics">Neural Metrics</a></h3>
+<p>Deep neural networks has been trained to score the quality of
+generations on given task. Since algorithmic metrics fall short when
+there is no given reference or there might be a very large number of
+possible references, deep neural networks come to the rescue. Example
+models include:</p>
+<ol class="incremental" type="1">
+<li>Comet and Cometkiwi: the first neural models to assess the quality
+of outputs of MT systems. Some other neural metrics participated in the
+competition in the following years are MetricX and XTOWER.</li>
+<li>LLM as a judge: Due to the fact that LLMs are used to reply to user
+queries, where there is no single correct answer, researchers studied
+the usage of LLMs to judge LLMs outputs.</li>
+</ol>
+<h2 id="evaluating-large-language-models"><a id="eval-llm">Evaluating
+Large Language Models</a></h2>
+<h2 id="references"><a id="references">References</a></h2>
+<ol class="incremental" type="1">
+<li><a id="post2018">Post, M. (2018). A call for clarity in reporting
+BLEU scores. arXiv preprint arXiv:1804.08771.</a></li>
+</ol>
+</body>
+</html>

@@ -113,6 +113,30 @@ It is about prompting LLM to evaluate the response of another LLM and give score
 Since we are in the hype of LLMs, expect that you find many works that I have not cited.
 However, you may check survey by [(Chang et al, 2024)](#chang2024) when going deeper.
 
+If you are wondering about bnechmarking LLMs, it is about testing the capabilities of the model to do whatever task of provided test set.
+For multiple choice questions, LLMs are expected to output "a", "b" or "c".
+This is handled like any classification task.
+For machine translation, image captioning and text summarization, they usually have references to which compare the generated text according to some metric.
+In this section, I am focusing on the case of juding output that can not have references, e.g. the style of responding to customer.
+In this case, we have the following attributes:
+
+1. Many solutions are valid, and
+1. Can not quantify preference algorithmically.
+
+To illustrate those attributes, let's consider the following two responses to "Hello, my name is Mohamed.":
+
+1. Hello Mohamed. I am [MODEL_NAME], an AI agent to assist you do stuff. How can I help you today?
+1. Hello Mohamed. Nice to meet you. I am [MODEL_NAME] and I am here to help you do great stuff. What would you like to do now?
+
+For me, I would prefer the second response.
+I find it more friendly and motivating to start taking actions.
+If you think of quantifying the difference, it is actually very difficult to compute it for this simple example.
+You may try to think of algorithmic solution, but we can easily give it an edge case.
+Moreover, most users can not describe why they prefer one response over the other, which makes it impossible to algorithm the preference.
+
+
+
+
 
 
 ## <a id="references">References</a>
